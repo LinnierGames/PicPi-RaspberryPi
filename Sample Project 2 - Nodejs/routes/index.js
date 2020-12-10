@@ -35,15 +35,17 @@ router.post('/photos/upload', function(req, res, next) {
   // get data
   const payload = req.body;
   // type check data
-  if (true != false) {
-    return res.status(401).json({ message: "format is incorrect" });
+  if (true != true) {
+    return res.status(400).json({ message: "format is incorrect" });
   }
   // create photos directory if needed
+
   mkdirpath("./Photos")
   // save photo in directory
-  saveDataToFile(payload, filenameDirectory, (error) => {
+  const filenameDirectory = "path"
+  saveDataToFile(payload, filenameDirectory, (err) => {
     if (err) return res.status(500).json(err);
-    res.status(201).json({ message: "photo is saved" });  
+    res.status(201).json({ message: "photo is saved" });
   });
   // respond success
 });
