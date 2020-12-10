@@ -23,7 +23,8 @@ function mkdirpath(dirPath)
 }
 
 function saveDataToFile(dirPath, data, completion) {
-  fs.writeFile(dirPath, data, completion);  
+  completion(null)
+  // fs.writeFile(dirPath, data, completion);  
 }
 
 /* GET home page. */
@@ -39,10 +40,11 @@ router.post('/photos/upload', function(req, res, next) {
     return res.status(400).json({ message: "format is incorrect" });
   }
   // create photos directory if needed
-
-  mkdirpath("./Photos")
-  // save photo in directory
+  const photosDirectory = "path"
   const filenameDirectory = "path"
+
+  mkdirpath(photosDirectory)
+  // save photo in directory
   saveDataToFile(payload, filenameDirectory, (err) => {
     if (err) return res.status(500).json(err);
     res.status(201).json({ message: "photo is saved" });
