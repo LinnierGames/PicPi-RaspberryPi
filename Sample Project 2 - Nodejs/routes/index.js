@@ -44,6 +44,16 @@ router.post('/photos/upload', function(req, res, next) {
   const payloadSize = Buffer.byteLength(String(payload.image), 'utf8');
   res.status(201).json({ message: "new image received!", payload: `Size: ${payloadSize} bytes` });
 
+  const mqttTopic = "file-system/photos/did-update"
+
+  var mqtt = require('mqtt')
+  var client  = mqtt.connect('localhost')
+  
+  client.on('connect', function () {
+    console.log("connected!")
+    client.publish(mqttTopic, 'Hello mqtt')
+  });
+
   // type check data
   // if (true != true) {
   //   return res.status(400).json({ message: "format is incorrect" });

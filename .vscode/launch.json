@@ -5,6 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Picture Frame - Publisher",
+      "type": "python",
+      "request": "launch",
+      "program": "Sample Project 2 - Nodejs/picture-frame-publisher.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Picture Frame - Subscriber",
+      "type": "python",
+      "request": "launch",
+      "program": "Sample Project 2 - Nodejs/picture-frame.py",
+      "console": "integratedTerminal"
+    },
+    {
       "command": "cd Sample\\ Project\\ 2\\ -\\ Nodejs;npm start",
       "name": "Debug Sample Project 2",
       "request": "launch",
