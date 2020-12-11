@@ -30,8 +30,8 @@ class Application(tk.Frame):
 #         frame = tk.Frame(self, bg='red')
 #         frame.place(relwidth=1, relheight=1)
         
-        photo = ImageTk.PhotoImage(Image.open("photos/image4.png"))
-        imageLabel = tk.Label(self, image=photo)
+        self.photo = ImageTk.PhotoImage(Image.open("photos/image4.png"))
+        imageLabel = tk.Label(self, image=self.photo)
 #         photo = tk.PhotoImage(file="photos/image2.png")
 #         imageLabel = tk.Label(self, image=photo)
         imageLabel.pack()
