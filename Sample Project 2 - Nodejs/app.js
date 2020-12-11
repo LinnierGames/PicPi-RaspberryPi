@@ -1,3 +1,4 @@
+var bodyParser = require('body-parser');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -14,8 +15,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+const payloadSizeLimit = '50mb';
+app.use(bodyParser.json({ limit: payloadSizeLimit }));
+app.use(bodyParser.urlencoded({ limit: payloadSizeLimit, extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
