@@ -14,9 +14,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     
-    # prints b'123' when payload is 123
-    # prints b'\x89PNG... when payload is a 2.2MB image
-
+    # prints 'New images stored!'
 
 client = mqtt.Client()
 client.on_connect = on_connect

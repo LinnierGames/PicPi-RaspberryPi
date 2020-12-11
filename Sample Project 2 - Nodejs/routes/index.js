@@ -47,11 +47,12 @@ router.post('/photos/upload', function(req, res, next) {
   const mqttTopic = "file-system/photos/did-update"
 
   var mqtt = require('mqtt')
-  var client  = mqtt.connect('localhost')
+  var client  = mqtt.connect('mqtt:localhost')
   
   client.on('connect', function () {
-    console.log("connected!")
-    client.publish(mqttTopic, 'Hello mqtt')
+    console.log("MQTT client connected!")
+    client.publish(mqttTopic, 'New images stored!')
+    client.end();
   });
 
   // type check data
