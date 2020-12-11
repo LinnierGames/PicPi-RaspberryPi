@@ -26,6 +26,13 @@ Install mqtt
 $ sudo apt-get install -y mosquitto mosquitto-clients
 $ sudo pip3 install paho-mqtt
 ```
+```
+
+Install GUI stuff
+```bash
+$ sudo apt-get install python3-tk
+$ sudo apt-get install python3-pil.imagetk
+```
 
 ### Runing the app
 
