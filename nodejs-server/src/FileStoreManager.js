@@ -38,10 +38,11 @@ module.exports = class FileStoreManager {
     this.#pendingFilenames[filenameToUse] = true
 
     const self = this
-    this.#fileStore.store(data, filenameToUse)
+    return this.#fileStore.store(data, filenameToUse)
       .then(() => {
         delete self.#pendingFilenames[filenameToUse]
         self.#mqtt.publish('file-system/new-file-stored', {})
+        return filenameToUse
       })
       .catch((err) => {
         delete self.#pendingFilenames[filenameToUse]
