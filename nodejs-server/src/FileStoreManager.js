@@ -1,12 +1,16 @@
+var MQTT = require('./MQTT');
+  
 /**
  * Manage storing files.
  */
 module.exports = class FileStoreManager {
   #fileStore;
   #pendingFilenames = {};
+  #mqtt;
 
   constructor(fileStore) {
     this.#fileStore = fileStore
+    this.#mqtt = new MQTT('localhost');
   }
 
   /**
@@ -32,12 +36,15 @@ module.exports = class FileStoreManager {
     }
 
     this.#pendingFilenames[filenameToUse] = true
+
+    const self = this
     this.#fileStore.store(data, filenameToUse)
       .then(() => {
-        delete this.#pendingFilenames[filenameToUse]
+        delete self.#pendingFilenames[filenameToUse]
+        self.#mqtt.publish('file-system/new-file-stored', {})
       })
       .catch((err) => {
-        delete this.#pendingFilenames[filenameToUse]
+        delete self.#pendingFilenames[filenameToUse]
       })
   }
 
