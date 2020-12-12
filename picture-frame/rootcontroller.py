@@ -1,12 +1,22 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
+from os import listdir
+from os.path import isfile, join
+
+photos_dir = "/home/pi/Pictures"
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
+        self.slideshow = []
+        self.slideshow_index = 0
+        self.photo = None
+        self.imageLabel = None
         self.pack()
-        self.create_widgets2()
+        self.restart_slideshow()
+        self.update_mainstage()
 
     def create_widgets(self):
         self.hi_there = tk.Button(self)
@@ -30,17 +40,28 @@ class Application(tk.Frame):
 #         frame = tk.Frame(self, bg='red')
 #         frame.place(relwidth=1, relheight=1)
         
-        # self.photo = ImageTk.PhotoImage(Image.open("photos/image4.png"))
-        # imageLabel = tk.Label(self, image=self.photo)
-#         photo = tk.PhotoImage(file="photos/image2.png")
-#         imageLabel = tk.Label(self, image=photo)
-        # imageLabel.pack()
+    def restart_slideshow(self):
+        filenames = [join(photos_dir, f) for f in listdir(photos_dir) if isfile(join(photos_dir, f))]
+        self.slideshow = filenames
+        self.slide_index = 0
+        # self.update_mainstage()
 
-    def refresh(self):
-        print("Refresh!")
-
-    def say_hi(self):
-        print("hi there, everyone!")
+    def update_mainstage(self):
+        file = self.slideshow[self.slideshow_index]
+        
+        self.photo = ImageTk.PhotoImage(Image.open(file))
+        if self.imageLabel is not None:
+            self.imageLabel.pack_forget()
+        self.imageLabel = tk.Label(self, image=self.photo)
+        self.imageLabel.pack()
+        self.master.after(1000, self.move_to_next_slide)
+        
+    def move_to_next_slide(self):
+        self.slideshow_index += 1
+        if self.slideshow_index >= len(self.slideshow):
+            self.slideshow_index = 0
+        
+        self.update_mainstage()
 
 root = tk.Tk()
 app = Application(master=root)
