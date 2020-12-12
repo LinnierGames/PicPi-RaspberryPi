@@ -24,5 +24,11 @@
       "request": "launch",
       "type": "node-terminal"
     }
+    {
+      "command": "cd nodejs-server;npm start",
+      "name": "nodejs-server",
+      "request": "launch",
+      "type": "node-terminal"
+    }
   ]
 }
