@@ -46,10 +46,16 @@ module.exports = class FileStore {
   }
 
   store(data, filename) {
+    const path = this.appendFilename(filename)
+    console.log(`saving data to: ${path}`)
     const promise = new Promise((resolve, reject) => {
-      fs.writeFile(this.appendFilename(filename), data, () => {
-        resolve();
-      });  
+      try {
+        fs.writeFile(path, data, () => {
+          resolve();
+        });
+      } catch (err) {
+        reject(err)
+      }
     });
 
     return promise

@@ -1,7 +1,7 @@
 var FileStore = require('./../src/FileStore');
 var FileStoreManager = require('./../src/FileStoreManager');
 
-const userPhotosDirectory = "/Users/esericksanc/Desktop/"
+const userPhotosDirectory = "/home/pi/Pictures"
 
 /**
  * Dependancy injection.
