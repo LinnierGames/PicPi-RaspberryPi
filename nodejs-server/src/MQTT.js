@@ -6,14 +6,16 @@ var mqtt = require('mqtt')
 module.exports = class FileStoreManager {
   #client;
   #subscriptions = {};
+  #pendingMessages = [];
 
   constructor(host) {
     this.host = host
     this.#client = mqtt.connect(`mqtt:${host}`)
   
+    const self = this;
     this.#client.on('connect', function () {
         console.log("did connect")
-        client.publish(mqttTopic, 'New images stored!')
+        self.publishPendingMessages();
     });
 
     const self = this
@@ -24,6 +26,11 @@ module.exports = class FileStoreManager {
   }
 
   publish(message, topic) {
+    if (this.#client.connected == false) {
+      this.#pendingMessages.push({ message: message, topic: topic })
+      return
+    }
+
     this.#client.publish(topic, message)
   }
 
@@ -41,6 +48,19 @@ module.exports = class FileStoreManager {
         self.#subscriptions[topic].push(callback)
       }
     })
+  }
+
+  publishPendingMessages() {
+    const messages = this.#pendingMessages
+    if (messages === []) {
+      return
+    }
+
+    for (message in messages) {
+      this.publish(message.message, message.topic)
+    }
+
+    this.#pendingMessages = []
   }
 
   handleMessage(topic, message) {
