@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "cd nodejs-server;npm start",
+      "name": "nodejs-server",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "picture-frame",
+      "type": "python",
+      "request": "launch",
+      "program": "picture-frame/app.py",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Picture Frame - Publisher",
       "type": "python",
       "request": "launch",
@@ -21,12 +34,6 @@
     {
       "command": "cd Sample\\ Project\\ 2\\ -\\ Nodejs;npm start",
       "name": "Debug Sample Project 2",
-      "request": "launch",
-      "type": "node-terminal"
-    }
-    {
-      "command": "cd nodejs-server;npm start",
-      "name": "nodejs-server",
       "request": "launch",
       "type": "node-terminal"
     }

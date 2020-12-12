@@ -1,20 +1,20 @@
 # from folder.subfolder.module import something_in_the_module
 
 from mqtt import client
-from rootcontroller import app
+from rootcontroller import Application
 
-# def main():
-#   app.after(1000, main)
+import platform
+if platform.system() == 'Darwin':
+    photos_dir = "/Users/esericksanc/Desktop"
+elif platform.system() == 'Linux':
+    photos_dir = "/home/pi/Pictures"
 
-# files_did_change_event = app.restart_slideshow
+app = Application(photos_dir)
+
 def on_message(client, userdata, msg):
     if msg.topic == "file-system/photos/did-update":
         app.restart_slideshow()
-            
 client.on_message = on_message
+
 client.loop_start()
-
-
-# app.after(1000, main)
-# start()
 app.mainloop()
