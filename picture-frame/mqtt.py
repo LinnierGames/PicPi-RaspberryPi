@@ -4,7 +4,7 @@ MQTT_SERVER = "localhost"
  
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("file-system/new-file-stored")
+    client.subscribe("file-system/photos/did-update")
  
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))

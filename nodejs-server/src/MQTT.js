@@ -17,8 +17,6 @@ module.exports = class FileStoreManager {
         console.log("did connect")
         self.publishPendingMessages();
     });
-
-    const self = this
     this.#client.on('message', function (topic, message) {
         console.log("did get message")
         self.handleMessage(topic, message)
@@ -27,10 +25,12 @@ module.exports = class FileStoreManager {
 
   publish(message, topic) {
     if (this.#client.connected == false) {
+      console.log("pending message")
       this.#pendingMessages.push({ message: message, topic: topic })
       return
     }
 
+    console.log(`message sent: ${topic}, ${message}`)
     this.#client.publish(topic, message)
   }
 
@@ -56,7 +56,8 @@ module.exports = class FileStoreManager {
       return
     }
 
-    for (message in messages) {
+    var message;
+    for (message of messages) {
       this.publish(message.message, message.topic)
     }
 
@@ -74,7 +75,8 @@ module.exports = class FileStoreManager {
       return;
     }
 
-    for (subscription in subscriptions) {
+    var subscription;
+    for (subscription of subscriptions) {
       subscription(message)
     }
   }
