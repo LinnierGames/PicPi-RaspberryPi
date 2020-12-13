@@ -6,13 +6,17 @@ var os = require('os');
  * Dependancy injection.
  */
 module.exports = class DI {
+
+  /**
+   * User directory where uploaded photos are saved.
+   */
   static userPhotosDirectory() {
     if (os.type() == 'Darwin') {
-      return "/Users/esericksanc/Desktop"
+      return "/Users/esericksanc/Desktop";
     } else if (os.type() == 'Linux') {
-      return "/home/pi/Pictures"
+      return "/home/pi/Pictures";
     } else {
-      return "~/tmp"
+      return "~/tmp";
     }
   }
 
@@ -21,6 +25,6 @@ module.exports = class DI {
    */
   static injectUserPhotosFileStoreManager() {
     const store = new FileStore(this.userPhotosDirectory());
-    return new FileStoreManager(store)
+    return new FileStoreManager(store);
   }
 }

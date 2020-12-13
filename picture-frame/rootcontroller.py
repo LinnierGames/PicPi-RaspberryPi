@@ -4,6 +4,8 @@ from PIL import ImageTk, Image
 from os import listdir
 from os.path import isfile, join
 
+import di
+
 class Application(tk.Frame):
     def __init__(self, photos_dir):
         master = tk.Tk()
@@ -49,10 +51,7 @@ class Application(tk.Frame):
 
 # If script mode, run the client here.
 if __name__ == "__main__":
-    import platform
-    if platform.system() == 'Darwin':
-        photos_dir = "/Users/esericksanc/Desktop"
-    elif platform.system() == 'Linux':
-        photos_dir = "/home/pi/Pictures"
-    app = Application(photos_dir)
+    import di
+
+    app = Application(di.userPhotosDirectory)
     app.mainloop()

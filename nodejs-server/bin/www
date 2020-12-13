@@ -77,13 +77,11 @@ function onError(error) {
   }
 }
 
-
-
 function getIP() {
   const { networkInterfaces } = require('os');
 
   const nets = networkInterfaces();
-  const results = Object.create(null); // or just '{}', an empty object
+  const results = Object.create(null);
 
   for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
@@ -98,7 +96,11 @@ function getIP() {
     }
   }
 
-  return results["en0"][0]
+  try {
+    return results["en0"][0]
+  } catch {
+    return undefined
+  }
 }
 
 /**

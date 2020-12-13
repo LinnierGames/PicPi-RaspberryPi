@@ -73,11 +73,12 @@ body {
 }
 
 // Response - error
+status code: 400
 body {
-  message: ${error-message}
+  message: "format is incorrect"
 }
 ```
-This POST endpoint does support sending multiple files in one request. To do so, send each photo with different file names but use the same photos form name
+This POST endpoint does support sending multiple files in one request. To do so, send each photo with different file names but use the same `photos` form name
 
 Here are some exmamples on sending multi-part form data in iOS:
 - URLSession: https://stackoverflow.com/a/59875552/1967709

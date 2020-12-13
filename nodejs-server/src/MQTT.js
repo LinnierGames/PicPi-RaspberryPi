@@ -9,75 +9,75 @@ module.exports = class FileStoreManager {
   #pendingMessages = [];
 
   constructor(host) {
-    this.host = host
-    this.#client = mqtt.connect(`mqtt:${host}`)
-  
+    this.host = host;
+    this.#client = mqtt.connect(`mqtt:${host}`);
+
     const self = this;
     this.#client.on('connect', function () {
-        console.log("did connect")
-        self.publishPendingMessages();
+      console.log("did connect");
+      self.publishPendingMessages();
     });
     this.#client.on('message', function (topic, message) {
-        console.log("did get message")
-        self.handleMessage(topic, message)
-    })
+      console.log("did get message");
+      self.handleMessage(topic, message);
+    });
   }
 
   publish(message, topic) {
     if (this.#client.connected == false) {
-      console.log("pending message")
-      this.#pendingMessages.push({ message: message, topic: topic })
-      return
+      console.log("pending message");
+      this.#pendingMessages.push({ message: message, topic: topic });
+      return;
     }
 
-    console.log(`message sent: ${topic}, ${message}`)
-    this.#client.publish(topic, message)
+    console.log(`message sent: ${topic}, ${message}`);
+    this.#client.publish(topic, message);
   }
 
   subscribe(topic, callback) {
-    const self = this
+    const self = this;
     this.#client.subscribe(topic, function (err) {
       if (err) {
-        console.log("failed to subscribe")
-        return
+        console.log("failed to subscribe");
+        return;
       }
 
       if (self.#subscriptions[topic] === undefined) {
-        self.#subscriptions[topic] = [callback]
+        self.#subscriptions[topic] = [callback];
       } else {
-        self.#subscriptions[topic].push(callback)
+        self.#subscriptions[topic].push(callback);
       }
-    })
+    });
   }
 
   publishPendingMessages() {
-    const messages = this.#pendingMessages
+    const messages = this.#pendingMessages;
     if (messages === []) {
-      return
+      return;
     }
 
     var message;
     for (message of messages) {
-      this.publish(message.message, message.topic)
+      this.publish(message.message, message.topic);
     }
 
-    this.#pendingMessages = []
+    this.#pendingMessages = [];
   }
 
   handleMessage(topic, message) {
-    const subscriptions = this.#subscriptions[topic]
+    const subscriptions = this.#subscriptions[topic];
     if (subscriptions === undefined) {
       return;
     }
 
     if (!Array.isArray(subscriptions)) {
-      delete this.#subscriptions[topic]
+      delete this.#subscriptions[topic];
       return;
     }
 
     var subscription;
     for (subscription of subscriptions) {
-      subscription(message)
+      subscription(message);
     }
   }
 }

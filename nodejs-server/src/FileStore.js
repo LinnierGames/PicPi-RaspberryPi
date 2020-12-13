@@ -11,18 +11,18 @@ module.exports = class FileStore {
     try {
       if (fs.existsSync(directory)) {
         if (!fs.lstatSync(directory).isDirectory()) {
-          throw "file path is not a directory"
+          throw "file path is not a directory";
         }
       }
     } catch {
-      throw "file path is not found"
+      throw "file path is not found";
     }
 
-    this.#directory = directory
+    this.#directory = directory;
   }
 
   get path() {
-    return this.#directory
+    return this.#directory;
   }
 
   filenames() {
@@ -32,29 +32,29 @@ module.exports = class FileStore {
   doesFilenameExist(filename) {
     try {
       if (fs.existsSync(this.appendFilename(filename))) {
-        return true
+        return true;
       }
 
-      return false
+      return false;
     } catch {
-      return false
+      return false;
     }
   }
 
   loadFilename(filename) {
-    return null
+    return undefined;
   }
 
   store(data, filename) {
     const path = this.appendFilename(filename)
-    console.log(`saving data to: ${path}`)
+    console.log(`saving data to: ${path}`);
     const promise = new Promise((resolve, reject) => {
       try {
         fs.writeFile(path, data, () => {
           resolve();
         });
       } catch (err) {
-        reject(err)
+        reject(err);
       }
     });
 
@@ -62,6 +62,6 @@ module.exports = class FileStore {
   }
 
   appendFilename(filename) {
-    return path.join(this.#directory, filename)
+    return path.join(this.#directory, filename);
   }
 }

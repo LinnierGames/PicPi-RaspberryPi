@@ -9,7 +9,7 @@ module.exports = class FileStoreManager {
   #mqtt;
 
   constructor(fileStore) {
-    this.#fileStore = fileStore
+    this.#fileStore = fileStore;
     this.#mqtt = new MQTT('localhost');
   }
 
@@ -20,43 +20,43 @@ module.exports = class FileStoreManager {
   store(data, filename) {
     var filenameExists = false;
     if (this.#fileStore.doesFilenameExist(filename)) {
-      filenameExists = true
+      filenameExists = true;
     }
     if (filename in this.#pendingFilenames) {
-      filenameExists = true
+      filenameExists = true;
     }
 
-    var filenameToUse = filename
+    var filenameToUse = filename;
     if (filenameExists) {
-      filenameToUse = this.dedupFilename(filename)
+      filenameToUse = this.dedupFilename(filename);
 
       while (this.#fileStore.doesFilenameExist(filenameToUse)) {
-        filenameToUse = this.dedupFilename(filenameToUse)
+        filenameToUse = this.dedupFilename(filenameToUse);
       }
     }
 
-    this.#pendingFilenames[filenameToUse] = true
+    this.#pendingFilenames[filenameToUse] = true;
 
-    const self = this
+    const self = this;
     return this.#fileStore.store(data, filenameToUse)
       .then(() => {
-        delete self.#pendingFilenames[filenameToUse]
-        self.#mqtt.publish("OK", 'file-system/photos/did-update')
-        return filenameToUse
+        delete self.#pendingFilenames[filenameToUse];
+        self.#mqtt.publish("OK", 'file-system/photos/did-update');
+        return filenameToUse;
       })
       .catch((err) => {
-        delete self.#pendingFilenames[filenameToUse]
+        delete self.#pendingFilenames[filenameToUse];
       })
   }
 
   dedupFilename(filename) {
-    const components = filename.split('.')
-    const name = components[0]
+    const components = filename.split('.');
+    const name = components[0];
 
     if (components.length == 1) {
-      return name + "-1"
+      return name + "-1";
     } else {
-      return name + "-1" + "." + components[1]
+      return name + "-1" + "." + components[1];
     }
   }
 }

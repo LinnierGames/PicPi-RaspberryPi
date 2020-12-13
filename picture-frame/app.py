@@ -1,20 +1,21 @@
 # from folder.subfolder.module import something_in_the_module
 
-from mqtt import client
+from mqtt import client as mqtt
 from rootcontroller import Application
+import di
 
-import platform
-if platform.system() == 'Darwin':
-    photos_dir = "/Users/esericksanc/Desktop"
-elif platform.system() == 'Linux':
-    photos_dir = "/home/pi/Pictures"
+app = Application(di.userPhotosDirectory)
 
-app = Application(photos_dir)
+def mqtt_on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    mqtt.subscribe(di.mqtt.userPhotosDirectoryDidChangeTopic)
 
-def on_message(client, userdata, msg):
-    if msg.topic == "file-system/photos/did-update":
+def mqtt_on_message(client, userdata, msg):
+    if msg.topic == di.mqtt.userPhotosDirectoryDidChangeTopic:
         app.restart_slideshow()
-client.on_message = on_message
 
-client.loop_start()
+mqtt.on_message = mqtt_on_message
+mqtt.on_connect = mqtt_on_connect
+mqtt.loop_start()
+
 app.mainloop()
