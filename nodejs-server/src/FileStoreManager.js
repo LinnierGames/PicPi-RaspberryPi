@@ -4,13 +4,13 @@ var MQTT = require('./MQTT');
  * Manage storing files.
  */
 module.exports = class FileStoreManager {
-  #fileStore;
-  #pendingFilenames = {};
-  #mqtt;
+  fileStore;
+  pendingFilenames = {};
+  mqtt;
 
   constructor(fileStore) {
-    this.#fileStore = fileStore;
-    this.#mqtt = new MQTT('localhost');
+    this.fileStore = fileStore;
+    this.mqtt = new MQTT('localhost');
   }
 
   /**
@@ -19,10 +19,10 @@ module.exports = class FileStoreManager {
    */
   store(data, filename) {
     var filenameExists = false;
-    if (this.#fileStore.doesFilenameExist(filename)) {
+    if (this.fileStore.doesFilenameExist(filename)) {
       filenameExists = true;
     }
-    if (filename in this.#pendingFilenames) {
+    if (filename in this.pendingFilenames) {
       filenameExists = true;
     }
 
@@ -30,22 +30,22 @@ module.exports = class FileStoreManager {
     if (filenameExists) {
       filenameToUse = this.dedupFilename(filename);
 
-      while (this.#fileStore.doesFilenameExist(filenameToUse)) {
+      while (this.fileStore.doesFilenameExist(filenameToUse)) {
         filenameToUse = this.dedupFilename(filenameToUse);
       }
     }
 
-    this.#pendingFilenames[filenameToUse] = true;
+    this.pendingFilenames[filenameToUse] = true;
 
     const self = this;
-    return this.#fileStore.store(data, filenameToUse)
+    return this.fileStore.store(data, filenameToUse)
       .then(() => {
-        delete self.#pendingFilenames[filenameToUse];
-        self.#mqtt.publish("OK", 'file-system/photos/did-update');
+        delete self.pendingFilenames[filenameToUse];
+        self.mqtt.publish("OK", 'file-system/photos/did-update');
         return filenameToUse;
       })
       .catch((err) => {
-        delete self.#pendingFilenames[filenameToUse];
+        delete self.pendingFilenames[filenameToUse];
       })
   }
 

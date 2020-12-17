@@ -5,7 +5,7 @@ var path = require('path');
  * Read, store and peak contents of a folder given a directory file path.
  */
 module.exports = class FileStore {
-  #directory;
+  directory;
 
   constructor(directory) {
     try {
@@ -18,15 +18,15 @@ module.exports = class FileStore {
       throw "file path is not found";
     }
 
-    this.#directory = directory;
+    this.directory = directory;
   }
 
   get path() {
-    return this.#directory;
+    return this.directory;
   }
 
   filenames() {
-    return fs.readdirSync(this.#directory);
+    return fs.readdirSync(this.directory);
   }
 
   doesFilenameExist(filename) {
@@ -62,6 +62,6 @@ module.exports = class FileStore {
   }
 
   appendFilename(filename) {
-    return path.join(this.#directory, filename);
+    return path.join(this.directory, filename);
   }
 }
