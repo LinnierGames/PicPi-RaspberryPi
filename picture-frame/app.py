@@ -1,10 +1,12 @@
 # from folder.subfolder.module import something_in_the_module
 
 from mqtt import client as mqtt
+import tkinter as tk
 from rootcontroller import Application
 import di
 
-app = Application(di.userPhotosDirectory)
+window = tk.Tk()
+app = Application(window, di.userPhotosDirectory)
 
 def mqtt_on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -18,4 +20,5 @@ mqtt.on_message = mqtt_on_message
 mqtt.on_connect = mqtt_on_connect
 mqtt.loop_start()
 
-app.mainloop()
+window.attributes("-fullscreen", True)
+window.mainloop()
