@@ -20,5 +20,12 @@ mqtt.on_message = mqtt_on_message
 mqtt.on_connect = mqtt_on_connect
 mqtt.loop_start()
 
+def exit_app(event):
+    window.attributes("-fullscreen", False)
+    window.destroy()
+
+window.bind("<Escape>", exit_app)
+
 window.attributes("-fullscreen", True)
+window.config(cursor='none')
 window.mainloop()
