@@ -7,6 +7,15 @@ Clone
 $ git clone https://github.com/LinnierGames/PicPi-RaspberryPi
 ```
 
+Install nodejs and npm
+```bash
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+$ nvm install 14.15.3
+```
+On the Mac, visit https://nodejs.org/en/download/ and download the installer v14.15.3
+
+Node should be v14.15.3 and npm should be 6.14.9
+
 Install tooling
 ```bash
 $ sudo apt install python-smbus
