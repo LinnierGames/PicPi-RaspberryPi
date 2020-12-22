@@ -61,6 +61,10 @@ module.exports = class FileStore {
     return promise
   }
 
+  deleteFilename(filename) {
+    return undefined;
+  }
+
   appendFilename(filename) {
     return path.join(this.#directory, filename);
   }

@@ -5,6 +5,7 @@ var logger = require('morgan');
 var path = require('path');
 
 var photosRouter = require('./routes/photos');
+var preferencesRouter = require('./routes/preferences');
 
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ limit: payloadSizeLimit, extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/photos', photosRouter);
+app.use('/preferences', preferencesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
