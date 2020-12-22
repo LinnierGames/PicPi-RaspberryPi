@@ -8,6 +8,25 @@ var router = express.Router();
 var MQTT = require('../src/MQTT');
 var DI = require('../src/DI');
 
+router.get(
+  '/', 
+
+  // Handle loading all filenames stored in the user directory.
+  function(req, res) {
+    userDirectory = FileStore(DI.userPhotosDirectory());
+    filenames = userDirectory.filenames();
+
+    host = "http://localhost"
+    var urls = map(filenames, (filename) => {
+      refurn `{host}/photos/{filename}`;
+    });
+
+    res
+        .status(200)
+        .json(urls);
+  }
+);
+
 router.post(
   '/upload', 
 
