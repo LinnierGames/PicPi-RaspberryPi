@@ -82,6 +82,9 @@ router.delete(
   // Handle loading and servering images.
   function(req, res) {    
     const filename = req.params.filename;
+    if (!userDirectory.doesFilenameExist(filename)) {
+      return res.status(404).json({ message: `filename not found: ${filename}` })
+    }
 
     userDirectory.deleteFilename(filename)
       .then(() => {
