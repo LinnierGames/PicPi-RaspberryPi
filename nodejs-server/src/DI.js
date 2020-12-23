@@ -21,6 +21,19 @@ module.exports = class DI {
   }
 
   /**
+   * User directory where metadata is stored.
+   */
+  static userPreferencesDirectory() {
+    if (os.type() == 'Darwin') {
+      return "/Users/esericksanc/PiPic";
+    } else if (os.type() == 'Linux') {
+      return "/home/pi/PiPic";
+    } else {
+      return "~/tmp";
+    }
+  }
+
+  /**
    * FileStore manager configured for storing and loading uploaded images.
    */
   static injectUserPhotosFileStoreManager() {

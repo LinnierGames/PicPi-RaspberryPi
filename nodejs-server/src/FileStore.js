@@ -48,8 +48,8 @@ module.exports = class FileStore {
     }
   }
 
-  loadFilename(filename) {
-    return undefined;
+  load(filename) {
+    return fs.readFileSync(this.appendFilename(filename));
   }
 
   store(data, filename) {
