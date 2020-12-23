@@ -9,12 +9,13 @@ var sharp = require('sharp');
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
 
+const userDirectory = new FileStore(DI.userPhotosDirectory(), { create: true });
+
 router.get(
   '/', 
 
   // Handle loading all filenames stored in the user directory.
   function(req, res) {
-    const userDirectory = new FileStore(DI.userPhotosDirectory(), { create: true });
     const filenames = userDirectory.filenames();
 
     const imageFilenames = filenames.filter((filename) => {
@@ -41,6 +42,10 @@ router.get(
   // Handle loading and servering images.
   function(req, res) {
     const filename = req.params.filename;
+    if (!userDirectory.doesFilenameExist(filename)) {
+      return res.status(404).json({ message: `filename not found: ${filename}` })
+    }
+
     const requestingAsThumbnail = (req.query.thumbnail == 'true');
     var scale = req.query.scale;
     if (scale === undefined) {
@@ -77,16 +82,12 @@ router.delete(
   // Handle loading and servering images.
   function(req, res) {    
     const filename = req.params.filename;
-    return res.status(503).json({ message: "not yet implemented", test: { filename }});
 
-    // TODO: Read from disk the image.
-
-    const userDirectory = FileStore(DI.userPhotosDirectory());
     userDirectory.deleteFilename(filename)
       .then(() => {
         res
           .status(200)
-          .send(imageData);
+          .json({ message: "Success!" });
       })
       .catch((err) => {
         res

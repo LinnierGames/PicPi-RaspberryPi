@@ -69,7 +69,23 @@ module.exports = class FileStore {
   }
 
   deleteFilename(filename) {
-    return undefined;
+    const path = this.appendFilename(filename)
+    console.log(`deleting data from: ${path}`);
+    const promise = new Promise((resolve, reject) => {
+      try {
+        fs.unlink(path, (err) => {
+          if (!err) {
+            return resolve();
+          }
+
+          reject(err);
+        });
+      } catch (err) {
+        reject(err);
+      }
+    });
+
+    return promise
   }
 
   appendFilename(filename) {
