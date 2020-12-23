@@ -7,15 +7,22 @@ var path = require('path');
 module.exports = class FileStore {
   #directory;
 
-  constructor(directory) {
+  constructor(directory, options = {}) {
     try {
-      if (fs.existsSync(directory)) {
+      const exists = fs.existsSync(directory);
+      if (exists) {
         if (!fs.lstatSync(directory).isDirectory()) {
           throw "file path is not a directory";
         }
+      } else if (options.create) {
+        fs.mkdirSync(directory);
       }
-    } catch {
-      throw "file path is not found";
+    } catch (error) {
+      if (options.create) {
+        fs.mkdirSync(directory);
+      } else {
+        throw "file path is not found";
+      } 
     }
 
     this.#directory = directory;
