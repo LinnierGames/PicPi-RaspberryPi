@@ -4,6 +4,7 @@ var fs = require('fs');
 var multer  = require('multer');
 var path = require('path');
 var router = express.Router();
+var sharp = require('sharp');
 
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
@@ -35,27 +36,37 @@ router.get(
 
 router.get(
   '/:filename', 
-  // "/avatar.png?thumbnail=true"
+  // "/avatar.png?thumbnail=true&scale=3"
 
   // Handle loading and servering images.
   function(req, res) {
     const filename = req.params.filename;
     const requestingAsThumbnail = (req.query.thumbnail == 'true');
-
-    return res.status(503).json({ message: "not yet implemented", test: { filename, requestingAsThumbnail }});
-
-    // TODO: Read from disk the image.
-
-    const userDirectory = FileStore(DI.userPhotosDirectory());
-    var imageData = userDirectory.loadFilename(filename);
-
-    if (requestingAsThumbnail) {
-      imageData = {}
+    var scale = req.query.scale;
+    if (scale === undefined) {
+      scale = 1;
     }
 
-    res
-      .status(200)
-      .send(imageData);
+    if (requestingAsThumbnail) {
+      sharp(path.join(DI.userPhotosDirectory(), filename))
+        .resize(164 * scale, 164 * scale, { fit: sharp.fit.inside })
+        .toBuffer()
+        .then((outputBuffer) => {
+          res
+            .status(200)
+            .contentType("image/png")
+            .send(outputBuffer);
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .sendFile(err);
+        });
+    } else {
+      res
+        .status(200)
+        .sendFile(path.join(DI.userPhotosDirectory(), filename));
+    }
   }
 );
 
