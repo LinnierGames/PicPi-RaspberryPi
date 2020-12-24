@@ -8,6 +8,7 @@ var sharp = require('sharp');
 
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
+var MQTT = require('../src/MQTT');
 
 const userDirectory = new FileStore(DI.userPhotosDirectory(), { create: true });
 
