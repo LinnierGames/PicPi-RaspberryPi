@@ -7,15 +7,22 @@ var path = require('path');
 module.exports = class FileStore {
   #directory;
 
-  constructor(directory) {
+  constructor(directory, options = {}) {
     try {
-      if (fs.existsSync(directory)) {
+      const exists = fs.existsSync(directory);
+      if (exists) {
         if (!fs.lstatSync(directory).isDirectory()) {
           throw "file path is not a directory";
         }
+      } else if (options.create) {
+        fs.mkdirSync(directory);
       }
-    } catch {
-      throw "file path is not found";
+    } catch (error) {
+      if (options.create) {
+        fs.mkdirSync(directory);
+      } else {
+        throw "file path is not found";
+      } 
     }
 
     this.#directory = directory;
@@ -41,8 +48,8 @@ module.exports = class FileStore {
     }
   }
 
-  loadFilename(filename) {
-    return undefined;
+  load(filename) {
+    return fs.readFileSync(this.appendFilename(filename));
   }
 
   store(data, filename) {
@@ -52,6 +59,26 @@ module.exports = class FileStore {
       try {
         fs.writeFile(path, data, () => {
           resolve();
+        });
+      } catch (err) {
+        reject(err);
+      }
+    });
+
+    return promise
+  }
+
+  deleteFilename(filename) {
+    const path = this.appendFilename(filename)
+    console.log(`deleting data from: ${path}`);
+    const promise = new Promise((resolve, reject) => {
+      try {
+        fs.unlink(path, (err) => {
+          if (!err) {
+            return resolve();
+          }
+
+          reject(err);
         });
       } catch (err) {
         reject(err);

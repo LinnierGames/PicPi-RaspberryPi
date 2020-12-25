@@ -12,9 +12,22 @@ module.exports = class DI {
    */
   static userPhotosDirectory() {
     if (os.type() == 'Darwin') {
-      return "/Users/esericksanc/Desktop";
+      return "/Users/esericksanc/Pictures/PiPic";
     } else if (os.type() == 'Linux') {
       return "/home/pi/Pictures";
+    } else {
+      return "~/tmp";
+    }
+  }
+
+  /**
+   * User directory where metadata is stored.
+   */
+  static userPreferencesDirectory() {
+    if (os.type() == 'Darwin') {
+      return "/Users/esericksanc/PiPic";
+    } else if (os.type() == 'Linux') {
+      return "/home/pi/PiPic";
     } else {
       return "~/tmp";
     }

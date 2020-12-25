@@ -4,9 +4,102 @@ var fs = require('fs');
 var multer  = require('multer');
 var path = require('path');
 var router = express.Router();
+var sharp = require('sharp');
 
-var MQTT = require('../src/MQTT');
+var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
+var MQTT = require('../src/MQTT');
+
+const userDirectory = new FileStore(DI.userPhotosDirectory(), { create: true });
+
+router.get(
+  '/', 
+
+  // Handle loading all filenames stored in the user directory.
+  function(req, res) {
+    const filenames = userDirectory.filenames();
+
+    const imageFilenames = filenames.filter((filename) => {
+      const extension = path.extname(filename).toLowerCase();
+      return (extension == ".png" || extension == ".jpeg" || extension == ".jpg");
+    });
+
+    const protocol = req.protocol;
+    const host = req.headers.host;
+    var urls = imageFilenames.map((filename) => {
+      return `${protocol}://${host}/photos/${filename}`;
+    });
+
+    res
+      .status(200)
+      .json(urls);
+  }
+);
+
+router.get(
+  '/:filename', 
+  // "/avatar.png?thumbnail=true&scale=3"
+
+  // Handle loading and servering images.
+  function(req, res) {
+    const filename = req.params.filename;
+    if (!userDirectory.doesFilenameExist(filename)) {
+      return res.status(404).json({ message: `filename not found: ${filename}` })
+    }
+
+    const requestingAsThumbnail = (req.query.thumbnail == 'true');
+    var scale = req.query.scale;
+    if (scale === undefined) {
+      scale = 1;
+    }
+
+    if (requestingAsThumbnail) {
+      sharp(path.join(DI.userPhotosDirectory(), filename))
+        .resize(164 * scale, 164 * scale, { fit: sharp.fit.inside })
+        .toBuffer()
+        .then((outputBuffer) => {
+          res
+            .status(200)
+            .contentType("image/png")
+            .send(outputBuffer);
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .sendFile(err);
+        });
+    } else {
+      res
+        .status(200)
+        .sendFile(path.join(DI.userPhotosDirectory(), filename));
+    }
+  }
+);
+
+router.delete(
+  '/:filename', 
+  // "/avatar.png"
+
+  // Handle loading and servering images.
+  function(req, res) {    
+    const filename = req.params.filename;
+    if (!userDirectory.doesFilenameExist(filename)) {
+      return res.status(404).json({ message: `filename not found: ${filename}` })
+    }
+
+    userDirectory.deleteFilename(filename)
+      .then(() => {
+        res
+          .status(200)
+          .json({ message: "Success!" });
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .json({ message: err });
+      });
+  }
+);
 
 router.post(
   '/upload', 
