@@ -6,13 +6,14 @@ var DI = require('../src/DI');
 
 const userDirectory = new FileStore(DI.userPreferencesDirectory(), { create: true });
 const PREFERENCES_FILENAME = "preferences.txt";
-const DEFAULT_PREFERENCES = { 
-  name: "My PiPic", 
-  slideshowDuration: 500
-};
+const DEFAULT_PREFERENCES = {
+  name: "My PiPic",
+  slideshowDuration: 500,
+  connectionPasscode : "1234" ,
+ };
 
 router.get(
-  '/', 
+  '/',
 
   // Handle populating the user preferences into req.userPreferences.
   attachPreferences,
@@ -26,7 +27,7 @@ router.get(
 );
 
 router.patch(
-  '/', 
+  '/',
 
   // Handle populating the user preferences into req.userPreferences.
   attachPreferences,
@@ -42,7 +43,10 @@ router.patch(
     if (slideshowDuration) {
       currentPreferences.slideshowDuration = slideshowDuration;
     }
-
+    const connectionPasscode = req.body.connectionPasscode;
+    if (connectionPasscode) {
+      currentPreferences.connectionPasscode = connectionPasscode;
+    }
     var jsonData = JSON.stringify(currentPreferences);
     userDirectory.store(jsonData, PREFERENCES_FILENAME)
       .then(() => {
