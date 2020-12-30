@@ -17,6 +17,11 @@ router.get(
 
   // Handle loading all filenames stored in the user directory.
   function(req, res) {
+    var imageScale = 1;
+    const requestingImageScale = req.query.scale;
+    if (requestingImageScale !== undefined) {
+      imageScale = requestingImageScale
+    }
     const filenames = userDirectory.filenames();
 
     const imageFilenames = filenames.filter((filename) => {
@@ -26,13 +31,17 @@ router.get(
 
     const protocol = req.protocol;
     const host = req.headers.host;
-    var urls = imageFilenames.map((filename) => {
-      return `${protocol}://${host}/photos/${filename}`;
+    var thumbnails = imageFilenames.map((filename) => {
+      return {
+        filename: filename,
+        thumbnail: `${protocol}://${host}/photos/${filename}?thumbnail=true&scale=${imageScale}`,
+        image: `${protocol}://${host}/photos/${filename}`,
+      }
     });
 
     res
       .status(200)
-      .json(urls);
+      .json(thumbnails);
   }
 );
 
