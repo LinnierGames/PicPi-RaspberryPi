@@ -34,8 +34,8 @@ router.get(
     var thumbnails = imageFilenames.map((filename) => {
       return {
         filename: filename,
-        thumbnail: `${protocol}://${host}/photos/${filename}?thumbnail=true&scale=${imageScale}`,
-        image: `${protocol}://${host}/photos/${filename}`,
+        thumbnail: encodeURI(`${protocol}://${host}/photos/${filename}?thumbnail=true&scale=${imageScale}`),
+        image: encodeURI(`${protocol}://${host}/photos/${filename}`),
       }
     });
 
