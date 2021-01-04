@@ -26,7 +26,7 @@ router.get(
 
     const imageFilenames = filenames.filter((filename) => {
       const extension = path.extname(filename).toLowerCase();
-      return (extension == ".png" || extension == ".jpeg" || extension == ".jpg");
+      return (extension == ".png" || extension == ".jpeg" || extension == ".jpg" || extension == ".heic");
     });
 
     const protocol = req.protocol;
