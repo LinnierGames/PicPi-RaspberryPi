@@ -29,9 +29,21 @@ router.get(
       return (extension == ".png" || extension == ".jpeg" || extension == ".jpg" || extension == ".heic");
     });
 
+    const sortedFilenames = imageFilenames.map((filename) => {
+      const dateCreated = userDirectory.stats(filename).birthtime;
+      return {
+        filename: filename,
+        dateCreated: dateCreated,
+      }
+    }).sort((a,b) => {
+      return new Date(b.dateCreated) - new Date(a.dateCreated);
+    }).map((filenameAndCreatedDate) => {
+      return filenameAndCreatedDate.filename;
+    });
+
     const protocol = req.protocol;
     const host = req.headers.host;
-    var thumbnails = imageFilenames.map((filename) => {
+    var thumbnails = sortedFilenames.map((filename) => {
       return {
         filename: filename,
         thumbnail: encodeURI(`${protocol}://${host}/photos/${filename}?thumbnail=true&scale=${imageScale}`),

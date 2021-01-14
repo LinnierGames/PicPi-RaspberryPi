@@ -36,6 +36,10 @@ module.exports = class FileStore {
     return fs.readdirSync(this.#directory);
   }
 
+  stats(filename) {
+    return fs.statSync(this.appendFilename(filename));
+  }
+
   doesFilenameExist(filename) {
     try {
       if (fs.existsSync(this.appendFilename(filename))) {
