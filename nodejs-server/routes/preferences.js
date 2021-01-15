@@ -4,7 +4,7 @@ var router = express.Router();
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
 var MQTT = require('../src/MQTT');
-const mqtt = new MQTT();
+const mqtt = new MQTT('localhost');
 
 const userDirectory = new FileStore(DI.userPreferencesDirectory(), { create: true });
 const PREFERENCES_FILENAME = "preferences.txt";
