@@ -3,13 +3,16 @@ var router = express.Router();
 
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
+var MQTT = require('../src/MQTT');
+const mqtt = new MQTT();
 
 const userDirectory = new FileStore(DI.userPreferencesDirectory(), { create: true });
 const PREFERENCES_FILENAME = "preferences.txt";
 const DEFAULT_PREFERENCES = {
   name: "My PiPic",
   slideshowDuration: 500,
-  connectionPasscode : "1234" ,
+  portraitMode: false,
+  connectionPasscode : "1234",
  };
 
 router.get(
@@ -50,6 +53,8 @@ router.patch(
     var jsonData = JSON.stringify(currentPreferences);
     userDirectory.store(jsonData, PREFERENCES_FILENAME)
       .then(() => {
+        mqtt.publish("OK", 'user-preferences/did-update');
+
         res
           .status(200)
           .json({ message: "OK", preferences: currentPreferences });

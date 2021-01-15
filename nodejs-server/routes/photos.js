@@ -9,6 +9,7 @@ var sharp = require('sharp');
 var FileStore = require('../src/FileStore');
 var DI = require('../src/DI');
 var MQTT = require('../src/MQTT');
+const mqtt = new MQTT();
 
 const userDirectory = new FileStore(DI.userPhotosDirectory(), { create: true });
 
@@ -179,7 +180,6 @@ router.post(
           .json({ message: "something went wrong", errors: errors });
       }
 
-      const mqtt = new MQTT('localhost');
       mqtt.publish("OK", 'file-system/photos/did-update');
 
       res

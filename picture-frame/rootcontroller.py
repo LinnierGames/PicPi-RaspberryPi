@@ -11,13 +11,18 @@ class Application(tk.Frame):
         super().__init__(root)
         self.photos_dir = photos_dir
         self.slide_duration = 1000 # milliseconds
+        self.portrait_mode = True
+        self.preferences = di.preferences
         self.pack()
         self.place(relwidth=1, relheight=1)
+
         self.slideshow = []
         self.slideshow_index = 0
         self.photo = None
         self.imageLabel = None
         self.previous_imageLabel = None
+
+        self.refresh_config()
         self.restart_slideshow()
         self.update_mainstage()
 
@@ -27,6 +32,11 @@ class Application(tk.Frame):
         self.slide_index = 0
 
         print("slideshow size: ", len(filenames))
+
+    def refresh_config(self):
+        self.preferences.refresh()
+        self.slide_duration = self.preferences.slide_duration
+        self.portrait_mode = self.preferences.portrait_mode
 
     def update_mainstage(self):
         file = self.slideshow[self.slideshow_index]
