@@ -1,18 +1,17 @@
 # PicPi
 
-### Installation (on raspberry pi)
-
 Clone
 ```bash
 $ git clone https://github.com/LinnierGames/PicPi-RaspberryPi
 ```
+
+### Installation (on raspberry pi)
 
 Install nodejs and npm
 ```bash
 $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 $ nvm install 14.15.3
 ```
-On the Mac, visit https://nodejs.org/en/download/ and download the installer v14.15.3
 
 Node should be v14.15.3 and npm should be 6.14.9
 
@@ -46,6 +45,30 @@ Install npm modules
 ```bash
 $ cd nodejs-server
 $ npm install
+```
+
+### Installation (on mac os)
+
+Install nodejs and npm
+Visit https://nodejs.org/en/download/ and download the installer v14.15.3
+
+Node should be v14.15.3 and npm should be 6.14.9
+
+Install mqtt
+```bash
+$ brew install mosquitto
+```
+
+Use `/usr/local/sbin/mosquitto -c /usr/local/etc/mosquitto/mosquitto.conf` to start the broker
+
+Install GUI stuff
+```bash
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ python3 get-pip.py
+$ # Add pip to $PATH
+$ PATH=~/Library/Python/3.8/bin:"$PATH"
+$ pip3 install paho-mqtt
+$ pip3 install Pillow
 ```
 
 ### Runing the app
