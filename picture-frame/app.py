@@ -16,7 +16,7 @@ def mqtt_on_message(client, userdata, msg):
     if msg.topic == di.mqtt.userPhotosDirectoryDidChangeTopic:
         app.restart_slideshow()
     if msg.topic == di.mqtt.userPreferencesDidChangeTopic:
-        app.restart_slideshow()
+        app.refresh_config()
 
 mqtt.on_message = mqtt_on_message
 mqtt.on_connect = mqtt_on_connect
