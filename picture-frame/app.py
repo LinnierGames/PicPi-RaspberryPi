@@ -31,6 +31,6 @@ def exit_app(event):
 
 window.bind("<Escape>", exit_app)
 
-# window.attributes("-fullscreen", True)
+window.attributes("-fullscreen", True)
 window.config(cursor='none')
 window.mainloop()
