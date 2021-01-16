@@ -68,7 +68,7 @@ class Application(tk.Frame):
             if self.nextPhoto is not None:
                 self.photo = self.nextPhoto
             else:
-                self.photo = Image.open(file)
+                image = Image.open(file)
 
                 if self.portrait_mode:
                     image = image.rotate(90, resample=0, expand=0)
@@ -111,11 +111,11 @@ class Application(tk.Frame):
         self.update_mainstage(new_session)
 
     def get_next_photo(self):
-        slideshow_index = self.slideshow_index + 1
-        if slideshow_index >= len(self.slideshow):
-            slideshow_index = 0
+        index = self.slideshow_index + 1
+        if index >= len(self.slideshow):
+            index = 0
 
-        file = self.slideshow[slideshow_index]
+        file = self.slideshow[index]
         image = Image.open(file)
 
         if self.portrait_mode:
