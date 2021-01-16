@@ -50,6 +50,10 @@ router.patch(
     if (connectionPasscode) {
       currentPreferences.connectionPasscode = connectionPasscode;
     }
+    const portraitMode = req.body.portraitMode;
+    if (portraitMode) {
+      currentPreferences.portraitMode = portraitMode;
+    }
     var jsonData = JSON.stringify(currentPreferences);
     userDirectory.store(jsonData, PREFERENCES_FILENAME)
       .then(() => {
