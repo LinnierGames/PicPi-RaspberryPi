@@ -4,11 +4,14 @@ from PIL import ImageTk, Image, ImageOps
 from os import listdir
 from os.path import isfile, join
 
+import sys
+
 import di
 
 class Application(tk.Frame):
     def __init__(self, root, photos_dir):
         super().__init__(root)
+        self.root = root
         self.photos_dir = photos_dir
         self.slide_duration = 1000 # milliseconds
         self.portrait_mode = True
@@ -47,6 +50,9 @@ class Application(tk.Frame):
             
             # Create and layout new image label.
             image = Image.open(file)
+
+            if self.portrait_mode:
+                image = image.rotate(90, resample=0, expand=0)
             resizedImage = ImageOps.fit(image, (1920,1080), method=0,
                                         bleed=0, centering=(0.5,0.5))
             self.photo = ImageTk.PhotoImage(resizedImage)
@@ -63,6 +69,7 @@ class Application(tk.Frame):
             # Queue moving to next slide.
             self.after(self.slide_duration, self.move_to_next_slide)
         except:
+            print("Unexpected error:", sys.exc_info()[0])
             self.move_to_next_slide()
 
     def move_to_next_slide(self):

@@ -58,10 +58,10 @@ class UserPrefernces:
 
     with open(userPreferences) as file:
         jsonData = json.load(file)
-        self.picture_frame_name = jsonData["name"]
-        self.slide_duration = jsonData["slideshowDuration"]
-        self.portrait_mode = jsonData["portraitMode"]
-        self.connection_passcode = jsonData["connectionPasscode"]
+        self.picture_frame_name = jsonData.get("name", "My PiPic")
+        self.slide_duration = jsonData.get("slideshowDuration", 1000)
+        self.portrait_mode = jsonData.get("portraitMode", False)
+        self.connection_passcode = jsonData.get("connectionPasscode", "1234")
 
 mqtt = MQTT()
 preferences = UserPrefernces()
