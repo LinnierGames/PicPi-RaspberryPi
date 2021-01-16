@@ -23,6 +23,7 @@ class Application(tk.Frame):
         self.slideshow = []
         self.slideshow_index = 0
         self.photo = None
+        self.nextPhoto = None
         self.messageLabel = None
         self.imageLabel = None
         self.previous_imageLabel = None
@@ -64,13 +65,16 @@ class Application(tk.Frame):
                 self.previous_imageLabel = self.imageLabel
             
             # Create and layout new image label.
-            image = Image.open(file)
+            if self.nextPhoto is not None:
+                self.photo = self.nextPhoto
+            else:
+                self.photo = Image.open(file)
 
-            if self.portrait_mode:
-                image = image.rotate(90, resample=0, expand=0)
-            resizedImage = ImageOps.fit(image, (1920,1080), method=0,
-                                        bleed=0, centering=(0.5,0.5))
-            self.photo = ImageTk.PhotoImage(resizedImage)
+                if self.portrait_mode:
+                    image = image.rotate(90, resample=0, expand=0)
+                resizedImage = ImageOps.fit(image, (1920,1080), method=0,
+                                            bleed=0, centering=(0.5,0.5))
+                self.photo = ImageTk.PhotoImage(resizedImage)
             
             if self.imageLabel is None:
                 self.imageLabel = tk.Label(self, image=self.photo)
@@ -92,6 +96,9 @@ class Application(tk.Frame):
                 if session != self.current_session: return
                 self.move_to_next_slide()
             self.after(self.slide_duration, lambda: move_to_next_slide_if_session_is_same(self))
+
+            # Prefetch the next photo after scheduling the slideshow duration.
+            self.nextPhoto = self.get_next_photo()
         except:
             print("Unexpected error while loading", file, ":", sys.exc_info()[0])
             self.move_to_next_slide(new_session)
@@ -102,6 +109,24 @@ class Application(tk.Frame):
             self.slideshow_index = 0
         
         self.update_mainstage(new_session)
+
+    def get_next_photo(self):
+        slideshow_index = self.slideshow_index + 1
+        if slideshow_index >= len(self.slideshow):
+            slideshow_index = 0
+
+        file = self.slideshow[slideshow_index]
+        image = Image.open(file)
+
+        if self.portrait_mode:
+            image = image.rotate(90, resample=0, expand=0)
+        resizedImage = ImageOps.fit(image, (1920,1080), method=0,
+                                    bleed=0, centering=(0.5,0.5))
+
+        return ImageTk.PhotoImage(resizedImage)
+
+        
+
 
 # If script mode, run the client here.
 if __name__ == "__main__":
