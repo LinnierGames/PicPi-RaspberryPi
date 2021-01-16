@@ -39,19 +39,19 @@ router.patch(
   function(req, res) {
     var currentPreferences = req.userPreferences;
     const name = req.body.name;
-    if (name) {
+    if (name != undefined) {
       currentPreferences.name = name;
     }
     const slideshowDuration = req.body.slideshowDuration;
-    if (slideshowDuration) {
+    if (slideshowDuration != undefined) {
       currentPreferences.slideshowDuration = slideshowDuration;
     }
     const connectionPasscode = req.body.connectionPasscode;
-    if (connectionPasscode) {
+    if (connectionPasscode != undefined) {
       currentPreferences.connectionPasscode = connectionPasscode;
     }
     const portraitMode = req.body.portraitMode;
-    if (portraitMode) {
+    if (portraitMode != undefined) {
       currentPreferences.portraitMode = portraitMode;
     }
     var jsonData = JSON.stringify(currentPreferences);
