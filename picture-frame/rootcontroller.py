@@ -27,8 +27,6 @@ class Application(tk.Frame):
         self.imageLabel = None
         self.previous_imageLabel = None
         self.current_session = 0
-        
-        self.next_button = None
 
         self.refresh_config(update_mainstage=False)
         self.restart_slideshow(update_mainstage=False)
@@ -83,11 +81,8 @@ class Application(tk.Frame):
                 # This removes the flicker between switching images.
                 self.imageLabel.configure(image=self.photo)
             
-            # Remove message and update controls.
             if self.messageLabel is not None:
                 self.messageLabel.destroy()
-            
-            self.update_control_buttons()
             
             # Queue moving to next slide.
             if new_session:
@@ -100,13 +95,7 @@ class Application(tk.Frame):
         except:
             print("Unexpected error while loading", file, ":", sys.exc_info()[0])
             self.move_to_next_slide(new_session)
-            
-    def update_control_buttons(self):
-        if self.next_button is not None:
-            self.next_button.destroy()
-        self.next_button = tk.Button(self, text=">", command=lambda: self.move_to_next_slide(new_session=True))
-        self.next_button.pack(fill=tk.BOTH, side=tk.RIGHT, expand=True, height=1)
-        
+
     def move_to_next_slide(self, new_session=False):
         self.slideshow_index += 1
         if self.slideshow_index >= len(self.slideshow):
