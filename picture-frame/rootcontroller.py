@@ -28,9 +28,13 @@ class Application(tk.Frame):
         self.previous_imageLabel = None
         self.current_session = 0
 
+        self.next_button = None
+
         self.refresh_config(update_mainstage=False)
         self.restart_slideshow(update_mainstage=False)
         self.update_mainstage(new_session=True)
+            
+        self.update_control_buttons()
 
     def restart_slideshow(self, update_mainstage=True):
         filenames = [join(self.photos_dir, f) for f in listdir(self.photos_dir) if isfile(join(self.photos_dir, f))]
@@ -48,7 +52,7 @@ class Application(tk.Frame):
         if update_mainstage:
             self.update_mainstage(new_session=True)
 
-    def update_mainstage(self, new_session = False):
+    def update_mainstage(self, new_session = False, move_forward_on_error = True):
         if len(self.slideshow) == 0:
             self.messageLabel = tk.Label(self, text="Slideshow is empty")
             self.messageLabel.pack()
@@ -94,7 +98,20 @@ class Application(tk.Frame):
             self.after(self.slide_duration, lambda: move_to_next_slide_if_session_is_same(self))
         except:
             print("Unexpected error while loading", file, ":", sys.exc_info()[0])
-            self.move_to_next_slide(new_session)
+            if move_forward_on_error:
+                self.move_to_next_slide(new_session)
+            else:
+                self.move_to_previous_slide(new_session)
+
+    def update_control_buttons(self):
+        width_of_buttons = 32
+        self.previous_button = tk.Button(self, text="<", command=lambda: self.move_to_previous_slide(new_session=True))
+        self.previous_button.place(relheight=1, width=width_of_buttons, y=0, x=0)
+    
+        self.root.update()
+        root_width = self.root.winfo_width()
+        self.next_button = tk.Button(self, text=">", command=lambda: self.move_to_next_slide(new_session=True))
+        self.next_button.place(relheight=1, width=width_of_buttons, x=root_width - width_of_buttons)
 
     def move_to_next_slide(self, new_session=False):
         self.slideshow_index += 1
@@ -103,10 +120,18 @@ class Application(tk.Frame):
         
         self.update_mainstage(new_session)
 
+    def move_to_previous_slide(self, new_session=False):
+        self.slideshow_index -= 1
+        if self.slideshow_index < 0:
+            self.slideshow_index = len(self.slideshow) - 1
+        
+        self.update_mainstage(new_session, move_forward_on_error=False)
+
 # If script mode, run the client here.
 if __name__ == "__main__":
     import di
 
     master = tk.Tk()
+    # master.attributes("-alpha", 0.5) 
     app = Application(master, di.userPhotosDirectory)
     master.mainloop()
