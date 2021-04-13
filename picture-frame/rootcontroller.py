@@ -104,12 +104,12 @@ class Application(tk.Frame):
                 self.move_to_previous_slide(new_session)
 
     def update_control_buttons(self):
-        width_of_buttons = 32
+        width_of_buttons = 96
         self.previous_button = tk.Button(self, text="<", command=lambda: self.move_to_previous_slide(new_session=True))
         self.previous_button.place(relheight=1, width=width_of_buttons, y=0, x=0)
     
         self.root.update()
-        root_width = self.root.winfo_width()
+        root_width = self.root.winfo_screenwidth()
         self.next_button = tk.Button(self, text=">", command=lambda: self.move_to_next_slide(new_session=True))
         self.next_button.place(relheight=1, width=width_of_buttons, x=root_width - width_of_buttons)
 
